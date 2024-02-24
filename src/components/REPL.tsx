@@ -12,19 +12,23 @@ import { REPLInput } from './REPLInput';
   You don't need to do that for this gearup.
 */
 
+export interface CommandResult {
+  command : string,
+  result : string | string[][]
+}
+
 export default function REPL() {
   // TODO: Add some kind of shared state that holds all the commands submitted.
-  const [commands,setCommands] = useState<string[]>([]);
-  const [count, setCount] = useState(0);
+  const [commands,setCommands] = useState<CommandResult[]>([]);
 
   return (
     <div className="repl">  
       {/*This is where your REPLHistory might go... You also may choose to add it within your REPLInput 
       component or somewhere else depending on your component organization. What are the pros and cons of each? */}
       {/* TODO: Update your REPLHistory and REPLInput to take in new shared state as props */}
-      <REPLHistory count={count} list={commands}/>
+      <REPLHistory list={commands}/>
       <hr></hr>
-      <REPLInput count={count} setCount={setCount} list={commands} setList={setCommands}/>
+      <REPLInput list={commands} setList={setCommands}/>
     </div>
   );
 }

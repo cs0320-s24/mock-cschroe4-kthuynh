@@ -1,13 +1,14 @@
 import '../styles/main.css';
 import { Dispatch, SetStateAction, useState} from 'react';
 import { ControlledInput } from './ControlledInput';
+import { CommandRegistry } from '../command_registry';
+import { CommandResult } from './REPL';
+import { initalizeCommands } from '../main';
 
 interface REPLInputProps{
   // TODO: Fill this with desired props... Maybe something to keep track of the submitted commands
-  count : number;
-  setCount : (count : number) => void;
-  list : string[];
-  setList : (list : string[]) => void;
+  list : CommandResult[];
+  setList : (list : CommandResult[]) => void;
 }
 // You can use a custom interface or explicit fields or both! An alternative to the current function header might be:
 // REPLInput(history: string[], setHistory: Dispatch<SetStateAction<string[]>>)
@@ -15,14 +16,17 @@ export function REPLInput(props : REPLInputProps) {
     // Remember: let React manage state in your webapp. 
     // Manages the contents of the input box
     const [commandString, setCommandString] = useState<string>('');
-    // TODO WITH TA : add a count state
 
+    const registry : CommandRegistry = new CommandRegistry;
+    initalizeCommands(registry);
 
-
-    // TODO WITH TA: build a handleSubmit function called in button onClick
     function handleSubmit() : void {
-      props.setCount(props.count + 1);
-      props.setList(props.list.concat([commandString]));
+      try {
+        let result : CommandResult = {command : commandString, result : registry.executeCommand(commandString, [])}
+        props.setList([...props.list, result]);
+      } catch {
+        alert("This command does not exist!");
+      }
       setCommandString('');
     }
 
@@ -42,8 +46,6 @@ export function REPLInput(props : REPLInputProps) {
               <legend>Enter a command:</legend>
               <ControlledInput value={commandString} setValue={setCommandString} ariaLabel={"Command input"}/>
             </fieldset>
-            {/* TODO WITH TA: Build a handleSubmit function that increments count and displays the text in the button */}
-            {/* TODO: Currently this button just counts up, can we make it push the contents of the input box to the history?*/}
             <button onClick={handleSubmit}>Submit</button>
         </div>
     );

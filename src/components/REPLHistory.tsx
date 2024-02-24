@@ -1,17 +1,41 @@
 import '../styles/main.css';
+import {getCSV} from '../../mocked_data/mockedJson'
+import { CommandResult } from './REPL';
+
 
 interface REPLHistoryProps{
-    // TODO: Fill with some shared state tracking all the pushed commands
-    count : number;
-    list : string[]
+    list : CommandResult[]
 }
+
 export function REPLHistory(props : REPLHistoryProps) {
+
+    function handleFormat(result : CommandResult) : JSX.Element {
+        if (Array.isArray(result.result)) {
+            let csv : string[][] | null = getCSV("data/mockedCSV");
+            return (
+            <table>
+                <tbody>
+                {
+                    csv.map(row => {
+                        return <tr>{
+                            row.map(value => {
+                                return <td>{value}</td>
+                            })    
+                        }
+                        </tr>
+                    })
+                }
+                </tbody>
+            </table>);
+        } else {
+            return <p>{result.result}</p>
+        }
+    }
+
     return (
         <div className="repl-history">
-            {/* This is where command history will go */}
-            {/* TODO: To go through all the pushed commands... try the .map() function! */}
-            {props.list.map(value => {
-                return <p key={props.list.indexOf(value)}>{value}</p>;
+            {props.list.map((value,index) => {
+                return <p key={index}>{handleFormat(value)}</p>;
             })}
         </div>
     );
