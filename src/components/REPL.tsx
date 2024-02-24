@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { CSVCommandCreator } from '../command_creator';
+import { CommandRegistry } from '../command_registry';
 import '../styles/main.css';
 import { REPLHistory } from './REPLHistory';
 import { REPLInput } from './REPLInput';
@@ -18,17 +20,23 @@ export interface CommandResult {
 }
 
 export default function REPL() {
-  // TODO: Add some kind of shared state that holds all the commands submitted.
   const [commands,setCommands] = useState<CommandResult[]>([]);
+  const [isBrief,setBrief] = useState<boolean>(true);
+
+  const registry : CommandRegistry = new CommandRegistry;
+  const creator : CSVCommandCreator = new CSVCommandCreator(registry);
+  creator.initalizeCommands();
+  registry.registerCommand("mode", () => {
+    const newBrief = !isBrief;
+    setBrief(newBrief);
+    return newBrief ? "Current mode is: BRIEF" : "Current mode is: VERBOSE";
+  });
 
   return (
     <div className="repl">  
-      {/*This is where your REPLHistory might go... You also may choose to add it within your REPLInput 
-      component or somewhere else depending on your component organization. What are the pros and cons of each? */}
-      {/* TODO: Update your REPLHistory and REPLInput to take in new shared state as props */}
-      <REPLHistory list={commands}/>
+      <REPLHistory list={commands} isBrief={isBrief}/>
       <hr></hr>
-      <REPLInput list={commands} setList={setCommands}/>
+      <REPLInput list={commands} setList={setCommands} registry={registry}/>
     </div>
   );
 }

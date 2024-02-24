@@ -1,22 +1,22 @@
 import '../styles/main.css';
-import {getCSV} from '../../mocked_data/mockedJson'
 import { CommandResult } from './REPL';
 
 
 interface REPLHistoryProps{
     list : CommandResult[]
+    isBrief : boolean
+    
 }
 
 export function REPLHistory(props : REPLHistoryProps) {
 
-    function handleFormat(result : CommandResult) : JSX.Element {
-        if (Array.isArray(result.result)) {
-            let csv : string[][] | null = getCSV("data/mockedCSV");
+    function formatResult(result : string[][] | string) : JSX.Element {
+        if (Array.isArray(result)) {
             return (
             <table>
                 <tbody>
                 {
-                    csv.map(row => {
+                    result.map(row => {
                         return <tr>{
                             row.map(value => {
                                 return <td>{value}</td>
@@ -28,14 +28,26 @@ export function REPLHistory(props : REPLHistoryProps) {
                 </tbody>
             </table>);
         } else {
-            return <p>{result.result}</p>
+            return <p>{result}</p>
+        }
+    }
+
+    function handleFormat(result : CommandResult) : JSX.Element {
+        if (props.isBrief) {
+            return formatResult(result.result);
+        } else {
+            return (
+            <div>
+                <p><b>Command</b>: {result.command}</p>
+                {formatResult(result.result)}
+            </div>);
         }
     }
 
     return (
         <div className="repl-history">
             {props.list.map((value,index) => {
-                return <p key={index}>{handleFormat(value)}</p>;
+                return <div key={index}>{handleFormat(value)}</div>;
             })}
         </div>
     );

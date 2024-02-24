@@ -3,26 +3,21 @@ import { Dispatch, SetStateAction, useState} from 'react';
 import { ControlledInput } from './ControlledInput';
 import { CommandRegistry } from '../command_registry';
 import { CommandResult } from './REPL';
-import { initalizeCommands } from '../main';
+import { CSVCommandCreator } from '../command_creator';
 
 interface REPLInputProps{
-  // TODO: Fill this with desired props... Maybe something to keep track of the submitted commands
   list : CommandResult[];
   setList : (list : CommandResult[]) => void;
+  registry : CommandRegistry;
 }
-// You can use a custom interface or explicit fields or both! An alternative to the current function header might be:
-// REPLInput(history: string[], setHistory: Dispatch<SetStateAction<string[]>>)
-export function REPLInput(props : REPLInputProps) {
-    // Remember: let React manage state in your webapp. 
-    // Manages the contents of the input box
-    const [commandString, setCommandString] = useState<string>('');
 
-    const registry : CommandRegistry = new CommandRegistry;
-    initalizeCommands(registry);
+export function REPLInput(props : REPLInputProps) {
+    const [commandString, setCommandString] = useState<string>('');
 
     function handleSubmit() : void {
       try {
-        let result : CommandResult = {command : commandString, result : registry.executeCommand(commandString, [])}
+        let parsedCommandString : string[] = commandString.split(" ");
+        let result : CommandResult = {command : parsedCommandString[0], result : props.registry.executeCommand(parsedCommandString[0], parsedCommandString.slice(1))}
         props.setList([...props.list, result]);
       } catch {
         alert("This command does not exist!");
@@ -30,12 +25,6 @@ export function REPLInput(props : REPLInputProps) {
       setCommandString('');
     }
 
-    // TODO: Once it increments, try to make it push commands... Note that you can use the `...` spread syntax to copy what was there before
-    // add to it with new commands.
-    /**
-     * We suggest breaking down this component into smaller components, think about the individual pieces 
-     * of the REPL and how they connect to each other...
-     */
     return (
         <div className="repl-input">
             {/* This is a comment within the JSX. Notice that it's a TypeScript comment wrapped in

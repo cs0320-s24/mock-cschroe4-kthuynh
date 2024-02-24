@@ -32,4 +32,13 @@ button{
 
 table{
     margin: auto;
+    border: 3px black solid;
+    border-radius: 3px;
+}
+
+td {
+    border: 2px black solid;
+    border-radius: 3px;
+    margin: 4px;
+    padding: 2px;
 }
