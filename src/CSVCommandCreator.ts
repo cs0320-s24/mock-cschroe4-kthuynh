@@ -1,5 +1,5 @@
 import { loadcsv, viewcsv, searchcsv } from "../mocked_data/mockedJson";
-import { CommandRegistry } from "./command_registry";
+import { CommandRegistry } from "./CommandRegistry";
 
 
 //TODO should we make this a general interface for dependency injection?

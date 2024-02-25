@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { CSVCommandCreator } from '../command_creator';
-import { CommandRegistry } from '../command_registry';
+import { CSVCommandCreator } from '../CSVCommandCreator';
+import { CommandRegistry } from '../CommandRegistry';
 import '../styles/main.css';
 import { REPLHistory } from './REPLHistory';
 import { REPLInput } from './REPLInput';
@@ -24,8 +24,8 @@ export default function REPL() {
   const [isBrief,setBrief] = useState<boolean>(true);
 
   const registry : CommandRegistry = new CommandRegistry;
-  const creator : CSVCommandCreator = new CSVCommandCreator(registry);
-  creator.initalizeCommands();
+  const csvCommands : CSVCommandCreator = new CSVCommandCreator(registry);
+  csvCommands.initalizeCommands();
   registry.registerCommand("mode", () => {
     const newBrief = !isBrief;
     setBrief(newBrief);

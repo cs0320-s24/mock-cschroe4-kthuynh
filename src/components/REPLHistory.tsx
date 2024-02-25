@@ -38,8 +38,8 @@ export function REPLHistory(props : REPLHistoryProps) {
         } else {
             return (
             <div>
-                <p><b>Command</b>: {result.command}</p>
-                {formatResult(result.result)}
+                <p><b>Command:</b> {result.command}</p>
+                <p><b>Output:</b></p> {formatResult(result.result)}
             </div>);
         }
     }

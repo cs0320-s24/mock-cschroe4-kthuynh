@@ -1,9 +1,9 @@
 import '../styles/main.css';
 import { Dispatch, SetStateAction, useState} from 'react';
 import { ControlledInput } from './ControlledInput';
-import { CommandRegistry } from '../command_registry';
+import { CommandRegistry } from '../CommandRegistry';
 import { CommandResult } from './REPL';
-import { CSVCommandCreator } from '../command_creator';
+import { CSVCommandCreator } from '../CSVCommandCreator';
 
 interface REPLInputProps{
   list : CommandResult[];
