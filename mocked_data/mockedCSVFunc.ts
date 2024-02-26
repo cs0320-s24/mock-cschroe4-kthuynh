@@ -6,13 +6,33 @@ const search_map : Map<string,  Map<string, string[][]>> = getSearchMap();
 
 // args[0] filepath, args[1] hasHeader
 export function loadcsv(args: string[]) : string {
-    const csv: string = args[0];
-    currentCSV = csv;
-    return "Current CSV: " + csv;
+    if (args.length != 2) {
+        alert("Missing required params for <LOAD>: file_path has_header");
+        return "ERROR: MISSING PARAMETERS";
+    } else {
+        const csv: string = args[0];
+        const hasHeader: string = args[1];
+
+        if (!file_map.has(csv)) {
+            return "ERROR: CSV NOT FOUND: " + csv;
+        }
+
+        if (hasHeader.toLowerCase() !== "true" && hasHeader.toLowerCase() !== "false") {
+            alert("has_header must be in the form of true/false");
+            return "ERROR: INVALID PARAMETERS"
+        }
+    
+        currentCSV = csv;
+        return "Current CSV: " + csv;
+    }
 }
 
-export function viewcsv() : string[][] {
-    return file_map.get(currentCSV) || [];
+export function viewcsv() : string[][] | string{
+    if (currentCSV && file_map.has(currentCSV)) {
+        return file_map.get(currentCSV)!;
+    } else {
+        return "ERROR: CSV NOT LOADED"
+    }
 }
 
 //args: 0: keyword; 1: columnIdentifier
@@ -26,4 +46,8 @@ export function searchcsv(args: string[]) : string[][] {
     }
     //todo error handle / throw error
     return [["Keyword not found"]];
+}
+
+export function clearLoadedCSV() {
+    currentCSV = "";
 }

@@ -1,5 +1,7 @@
 const file_map = new Map<string, string[][]>;
 const search_map : Map<string, Map<string, string[][]>> = new Map<string, Map<string, string[][]>>;
+//mocked searching map
+//const search_map_num : Map<string, Map<number, Map<string,string[][]>>> = new Map<string, Map<string, string[][]>>;
 
 /**
  * Helper method to add the mocked data to maps for mocked CSV functions
@@ -9,11 +11,37 @@ const search_map : Map<string, Map<string, string[][]>> = new Map<string, Map<st
 function addToMaps(filepath : string, mockedCSV : string[][]) {
     file_map.set(filepath, mockedCSV);
     const mockedCSVMap : Map<string, string[][]> = new Map<string,string[][]>;
+    const mockedCSVMapNum : Map<number, Map<string, string[][]>> = new Map<number, Map<string,string[][]>>;
     for(let i = 0; i < mockedCSV.length; i++){
-        for(const element of mockedCSV[i]){
-            const lowerCaseElement = element.toLowerCase(); //todo is there a cleaner way?
-            const rowsList = mockedCSVMap.get(lowerCaseElement);
-            if(rowsList){
+        for(let j = 0; j < mockedCSV[i].length; j++){
+            //through each column
+            const lowerCaseElement = mockedCSV[i][j].toLowerCase(); //todo is there a cleaner way?
+            
+            //gets the map of the current column index
+            
+            let columnMap;
+            if (mockedCSVMapNum.has(j)) {
+                columnMap = mockedCSVMapNum.get(j);
+            } else {
+                columnMap = new Map<string, string[][]>
+                mockedCSVMapNum.set(j, columnMap);
+            }
+
+            /*
+            //todo sho
+            const rowsListIndexed = columnMap?.get(lowerCaseElement);
+            if(rowsListIndexed){
+                if(!rowsListIndexed.includes(mockedCSV[i])){
+                    rowsListIndexed.push(mockedCSV[i])
+                    columnMap.set(lowerCaseElement, rowsListIndexed);
+                }
+            } else {
+                columnMap.set(lowerCaseElement, [mockedCSV[i]]);
+            }
+            
+            //make the regular map without columns
+            if(mockedCSVMap.has(lowerCaseElement)){
+                const rowsList = mockedCSVMap.get(lowerCaseElement);
                 if(!rowsList.includes(mockedCSV[i])){
                     rowsList.push(mockedCSV[i])
                     mockedCSVMap.set(lowerCaseElement, rowsList);
@@ -21,6 +49,18 @@ function addToMaps(filepath : string, mockedCSV : string[][]) {
             } else {
                 mockedCSVMap.set(lowerCaseElement, [mockedCSV[i]]);
             }
+            */
+            
+            // const rowsList = mockedCSVMap.get(lowerCaseElement);
+            // if(rowsList){
+                
+            //     if(!rowsList.includes(mockedCSV[i])){
+            //         rowsList.push(mockedCSV[i])
+            //         mockedCSVMap.set(lowerCaseElement, rowsList);
+            //     }
+            // } else {
+            //     mockedCSVMap.set(lowerCaseElement, [mockedCSV[i]]);
+            // }
         }
     }
     search_map.set(filepath, mockedCSVMap);

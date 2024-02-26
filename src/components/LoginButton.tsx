@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
+import { clearLoadedCSV } from '../../mocked_data/mockedCSVFunc';
 
 
 interface loginProps {
@@ -16,7 +17,12 @@ export function LoginButton(props: loginProps) {
 
   if (props.isLoggedIn) {
     return (
-      <button aria-label='Sign Out' onClick={authenticate}>Sign out</button>
+      <button aria-label='Sign Out' 
+      onClick={() => {
+        clearLoadedCSV();
+        authenticate();
+      }}
+      >Sign out</button>
     )
   } else {
     return (

@@ -63,10 +63,57 @@ test('on page load, i see a button', async ({ page }) => {
   await expect(page.getByRole('button')).toBeVisible;
 });
 
-test('after I click the button, its label increments', async ({ page }) => {
-  // TODO WITH TA: Fill this in to test your button counter functionality!
-});
 
 test('after I click the button, my command gets pushed', async ({ page }) => {
   // TODO: Fill this in to test your button push functionality!
 });
+
+test('after I enter mode, the history shows up', async ({ page }) => {
+  //test the mode functionality to view commands
+
+});
+
+test('after I load a csv, the URL gets pushed', async ({ page }) => {
+
+});
+
+test('after I load the wrong csv, an error message shows', async ({ page }) => {
+
+});
+
+test('after I view or search before load, an error message shows', async ({ page }) => {
+
+});
+
+test('after I load two different CSVs. that csv changes', async ({ page }) => {
+
+});
+
+test('after I search a CSV (with or without column), error message or row return', async ({ page }) => {
+
+});
+
+test('while declaring a header in loadcsv, if not true or false should return error message', async ({ page }) => {
+
+});
+
+test('after I declare no header and search a CSV with string column identifier, error message', async ({ page }) => {
+
+});
+
+test('after I click log out, resets csv state and comand history', async ({ page }) => {
+  
+});
+
+test('after I enter an empty command, I get an error message', async ({ page }) => {
+  
+});
+
+test('after I enter a command that does not exist, I get an error message', async ({ page }) => {
+  
+});
+
+test('after I enter a command that exists but wrong number of args, error message', async ({ page }) => {
+  
+});
+
