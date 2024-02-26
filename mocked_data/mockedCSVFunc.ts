@@ -7,19 +7,17 @@ const search_map : Map<string,  Map<string, string[][]>> = getSearchMap();
 // args[0] filepath, args[1] hasHeader
 export function loadcsv(args: string[]) : string {
     if (args.length != 2) {
-        alert("Missing required params for <LOAD>: file_path has_header");
-        return "ERROR: MISSING PARAMETERS";
+        return "ERROR: Missing required params for <LOAD>: <file_path> <has_header>";
     } else {
         const csv: string = args[0];
         const hasHeader: string = args[1];
 
         if (!file_map.has(csv)) {
-            return "ERROR: CSV NOT FOUND: " + csv;
+            return "ERROR: CSV not found: " + csv;
         }
 
         if (hasHeader.toLowerCase() !== "true" && hasHeader.toLowerCase() !== "false") {
-            alert("has_header must be in the form of true/false");
-            return "ERROR: INVALID PARAMETERS"
+            return "ERROR: <has_header> must be in the form of true/false"
         }
     
         currentCSV = csv;
@@ -31,12 +29,20 @@ export function viewcsv() : string[][] | string{
     if (currentCSV && file_map.has(currentCSV)) {
         return file_map.get(currentCSV)!;
     } else {
-        return "ERROR: CSV NOT LOADED"
+        return "ERROR: CSV not loaded";
     }
 }
 
 //args: 0: keyword; 1: columnIdentifier
-export function searchcsv(args: string[]) : string[][] {
+export function searchcsv(args: string[]) : string[][] | string {
+    if (!currentCSV) {
+        return "ERROR: CSV not loaded";
+    }
+
+    if (args.length != 1 && args.length != 2) {
+        return "ERROR: Missing required params for <SEARCH>: <value> OPTIONAL:<column_identifier>";
+    }
+
     const wordsToRowsMap = search_map.get(currentCSV);
     if(wordsToRowsMap){
         const rowsFound = wordsToRowsMap.get(args[0].toLowerCase()); //TODO add column identifier??
@@ -45,7 +51,7 @@ export function searchcsv(args: string[]) : string[][] {
         }
     }
     //todo error handle / throw error
-    return [["Keyword not found"]];
+    return "Keyword not found";
 }
 
 export function clearLoadedCSV() {
