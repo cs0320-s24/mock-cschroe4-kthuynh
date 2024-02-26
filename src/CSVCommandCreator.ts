@@ -1,4 +1,4 @@
-import { loadcsv, viewcsv, searchcsv } from "../mocked_data/mockedJson";
+import { loadcsv, viewcsv, searchcsv } from "../mocked_data/mockedCSVFunc";
 import { CommandRegistry } from "./CommandRegistry";
 
 
