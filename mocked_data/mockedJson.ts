@@ -127,5 +127,6 @@ export function getSearchMap() : Map<string,  Map<string, string[][]>> {
  * data/mockedCSVSharedAcrossRows -> "1 2" -> ["California", "1", "1", "1", "1,500"]
  * data/mockedCSVSharedAcrossRows -> "1" -> ["California", "1", "1", "1", "1,500"], ["Boston", "1", "2", "4", "1,000"]
  * 
- * It's up to your discretion which search parameters you include in the map. If it's not in the map, just return "Invalid input!"
+ * It's up to your discretion which search parameters you include in the map. Just be diverse in what kind of queries you include.
+ * If it's not in the map, just return "Invalid input!"
  */
