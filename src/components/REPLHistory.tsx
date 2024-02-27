@@ -37,9 +37,11 @@ export function REPLHistory(props : REPLHistoryProps) {
             return formatResult(result.result);
         } else {
             return (
-            <div>
-                <p><b>Command:</b> {result.command}</p>
-                <p><b>Output:</b></p> {formatResult(result.result)}
+            <div className="result-box">
+                <p><b><u>Command</u></b></p>
+                <p>{result.command}</p>
+                <p><b><u>Output</u></b></p>
+                {formatResult(result.result)}
             </div>);
         }
     }

@@ -20,8 +20,8 @@ export class CSVCommandCreator {
     }
 
     initalizeCommands() {
-        this.registry.registerCommand("viewcsv", () : string[][] | string => {return viewcsv()});
-        this.registry.registerCommand("loadcsv", (args : string[]) : string => {return loadcsv(args);})
-        this.registry.registerCommand("searchcsv", (args: string[]): string[][] | string => { return searchcsv(args); })
+        this.registry.registerCommand("view", () : string[][] | string => {return viewcsv()});
+        this.registry.registerCommand("load_file", (args : string[]) : string => {return loadcsv(args);})
+        this.registry.registerCommand("search", (args: string[]): string[][] | string => { return searchcsv(args); })
     }
 }

@@ -19,6 +19,7 @@ function addToMaps(filepath : string, mockedCSV : string[][]) {
             
             //gets the map of the current column index
             
+            /*
             let columnMap;
             if (mockedCSVMapNum.has(j)) {
                 columnMap = mockedCSVMapNum.get(j);
@@ -27,7 +28,6 @@ function addToMaps(filepath : string, mockedCSV : string[][]) {
                 mockedCSVMapNum.set(j, columnMap);
             }
 
-            /*
             //todo sho
             const rowsListIndexed = columnMap?.get(lowerCaseElement);
             if(rowsListIndexed){
@@ -94,6 +94,12 @@ const mockedCSVSharedAcrossRows: string[][] = [
   ["Boston", "1", "2", "4", "1,000"]
 ];
 addToMaps("data/mockedCSVSharedAcrossRows", mockedCSVSharedAcrossRows);
+
+const mockedCSVMalformed: string[][] = [
+    ["Location", "", "Occupants"],
+    ["", "", ""]
+]
+addToMaps("data/mockedCSVMalformed", mockedCSVMalformed);
 
 const mockedSearch : string[][] = [
     ["California", "1", "1", "1"]
