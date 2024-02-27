@@ -3,7 +3,7 @@ import {getFileMap, getSearchMap} from './mockedJson'
 let currentCSV : string = "";
 const file_map : Map<string, string[][]> = getFileMap();
 const search_map : Map<string,  Map<string, string[][]>> = getSearchMap();
-let hasHeader : string;
+let has_header : string;
 
 // args[0] filepath, args[1] hasHeader
 export function loadcsv(args: string[]) : string {
@@ -11,20 +11,21 @@ export function loadcsv(args: string[]) : string {
         return "ERROR: Missing required params for <load_file>: <file_path> <has_header>";
     } else {
         const csv: string = args[0];
-        hasHeader = args[1];
+        has_header = args[1];
 
         if (!file_map.has(csv)) {
             return "ERROR: CSV not found: " + csv;
         }
 
-        if (hasHeader.toLowerCase() !== "true" && hasHeader.toLowerCase() !== "false") {
-            return "ERROR: <has_header> must be in the form of true/false"
+        if (has_header.toLowerCase() !== "true" && has_header.toLowerCase() !== "false") {
+            has_header = "";
+            return "ERROR: <has_header> must be in the form of true/false";
         }
 
         // Mocking what is returned when a CSV is unable to be parsed
         // due to malformation.
         if (csv.includes("Malformed")) {
-            return "ERROR: CSV Malformed"
+            return "ERROR: CSV Malformed";
         }
 
         currentCSV = csv;
@@ -63,8 +64,7 @@ export function searchcsv(args: string[]) : string[][] | string {
     return "Keyword not found";
 }
 
-
 export function clearLoadedCSV() {
     currentCSV = "";
-    hasHeader = "";
+    has_header = "";
 }

@@ -17,7 +17,7 @@ export function REPLHistory(props : REPLHistoryProps) {
                 <tbody>
                 {
                     result.map(row => {
-                        return <tr >{ // TODO if we can extract the hasHeader value we can do className={ hasHeader ? 'header' : ''} to format it differently in view
+                        return <tr>{ // TODO if we can extract the hasHeader value we can do className={ hasHeader ? 'header' : ''} to format it differently in view
                             row.map(value => {
                                 return <td>{value}</td>
                             })    

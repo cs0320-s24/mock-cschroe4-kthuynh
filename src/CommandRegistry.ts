@@ -19,7 +19,7 @@ export class CommandRegistry {
 
     executeCommand(command : string, args : Array<string>): string[][] | string {
         if (!this.commandMaps.has(command)) {
-            return command;
+            throw Error("Command does not exist!");
         } else {
             const func = this.commandMaps.get(command);
             return func!(args);
