@@ -51,7 +51,9 @@ export function searchcsv(args: string[]) : string[][] | string {
 
     const wordsToRowsMap = search_map.get(currentCSV);
     if(wordsToRowsMap){
-        const rowsFound = wordsToRowsMap.get(args[0].toLowerCase()); //TODO add column identifier??
+        const query : string = (args[0].toLowerCase() + " " + (args[1].toLowerCase() ? args[1].toLowerCase() : "")).trim();
+        console.log(query);
+        const rowsFound = wordsToRowsMap.get(query); //TODO add column identifier??
         if(rowsFound){
             return rowsFound;
         }
