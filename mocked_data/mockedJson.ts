@@ -117,3 +117,15 @@ export function getFileMap() : Map<string, string[][]> {
 export function getSearchMap() : Map<string,  Map<string, string[][]>> {
     return new Map(search_map);
 }
+
+/**
+ * Here's how we'll mock search. Let's do a map of file_names to a map of strings (our search parameters) to 2d arrays (our csv results).
+ * In summary, Map<string, Map<string, string[][]>.
+ * 
+ * It would look something like this:
+ * data/mockedCSV -> "3 bathrooms" -> ["Boston", "3", "6", "3"]
+ * data/mockedCSVSharedAcrossRows -> "1 2" -> ["California", "1", "1", "1", "1,500"]
+ * data/mockedCSVSharedAcrossRows -> "1" -> ["California", "1", "1", "1", "1,500"], ["Boston", "1", "2", "4", "1,000"]
+ * 
+ * It's up to your discretion which search parameters you include in the map. If it's not in the map, just return "Invalid input!"
+ */
