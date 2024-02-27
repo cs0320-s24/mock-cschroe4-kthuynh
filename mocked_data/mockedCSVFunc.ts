@@ -3,6 +3,7 @@ import {getFileMap, getSearchMap} from './mockedJson'
 let currentCSV : string = "";
 const file_map : Map<string, string[][]> = getFileMap();
 const search_map : Map<string,  Map<string, string[][]>> = getSearchMap();
+let hasHeader : string;
 
 // args[0] filepath, args[1] hasHeader
 export function loadcsv(args: string[]) : string {
@@ -10,7 +11,7 @@ export function loadcsv(args: string[]) : string {
         return "ERROR: Missing required params for <load_file>: <file_path> <has_header>";
     } else {
         const csv: string = args[0];
-        const hasHeader: string = args[1];
+        hasHeader = args[1];
 
         if (!file_map.has(csv)) {
             return "ERROR: CSV not found: " + csv;
@@ -41,6 +42,7 @@ export function viewcsv() : string[][] | string{
 
 //args: 0: keyword; 1: columnIdentifier
 export function searchcsv(args: string[]) : string[][] | string {
+    //todo check has header
     if (!currentCSV) {
         return "ERROR: CSV not loaded";
     }
@@ -62,6 +64,8 @@ export function searchcsv(args: string[]) : string[][] | string {
     return "Keyword not found";
 }
 
+
 export function clearLoadedCSV() {
     currentCSV = "";
+    hasHeader = "";
 }
