@@ -10,10 +10,11 @@ interface REPLHistoryProps{
 
 export function REPLHistory(props : REPLHistoryProps) {
 
-    function formatResult(result : string[][] | string) : JSX.Element {
+    function formatResult(result : string[][] | string, formatID : string) : JSX.Element {
+        console.log(formatID);
         if (Array.isArray(result)) {
             return (
-            <table>
+            <table  className={formatID}>
                 <tbody>
                 {
                     result.map(row => {
@@ -34,14 +35,14 @@ export function REPLHistory(props : REPLHistoryProps) {
 
     function handleFormat(result : CommandResult) : JSX.Element {
         if (props.isBrief) {
-            return formatResult(result.result);
+            return formatResult(result.result, result.formatID);
         } else {
             return (
             <div className="result-box">
                 <p><b><u>Command</u></b></p>
                 <p>{result.command}</p>
                 <p><b><u>Output</u></b></p>
-                {formatResult(result.result)}
+                {formatResult(result.result, result.formatID)}
             </div>);
         }
     }

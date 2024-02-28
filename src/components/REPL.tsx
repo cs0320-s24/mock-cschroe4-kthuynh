@@ -16,7 +16,8 @@ import { REPLInput } from './REPLInput';
 
 export interface CommandResult {
   command : string,
-  result : string | string[][]
+  result : string | string[][],
+  formatID : string
 }
 
 export default function REPL() {

@@ -43,7 +43,7 @@ export function viewcsv() : string[][] | string{
 
 //args: 0: keyword; 1: columnIdentifier
 export function searchcsv(args: string[]) : string[][] | string {
-    //todo check has header
+    
     if (!currentCSV) {
         return "ERROR: CSV not loaded";
     }
@@ -52,6 +52,7 @@ export function searchcsv(args: string[]) : string[][] | string {
         return "ERROR: Missing required params for <search>: <value> OPTIONAL:<column_identifier>";
     }
 
+    //todo check has header
     const wordsToRowsMap = search_map.get(currentCSV);
     if(wordsToRowsMap){
         const query : string = (args[0].toLowerCase() + " " + (args[1] ? args[1].toLowerCase() : "")).trim();
@@ -62,6 +63,13 @@ export function searchcsv(args: string[]) : string[][] | string {
     }
     
     return "Keyword not found";
+}
+
+export function getHeaderFormatting(): string{
+    if(has_header.toLowerCase() == "true"){
+        return 'headed-table';
+    }
+    return '';
 }
 
 export function clearLoadedCSV() {
