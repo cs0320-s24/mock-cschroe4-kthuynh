@@ -5,33 +5,39 @@ import '../styles/main.css';
 import { REPLHistory } from './REPLHistory';
 import { REPLInput } from './REPLInput';
 
-/* 
-  You'll want to expand this component (and others) for the sprints! Remember 
-  that you can pass "props" as function arguments. If you need to handle state 
-  at a higher level, just move up the hooks and pass the state/setter as a prop.
-  
-  This is a great top level component for the REPL. It's a good idea to have organize all components in a component folder.
-  You don't need to do that for this gearup.
-*/
-
+/**
+ * An interface that represents the format that a command returns, including
+ * its command name, as well as the result of calling the command.
+ */
 export interface CommandResult {
   command : string,
   result : string | string[][]
 }
 
+/**
+ * The REPL function
+ * @returns A JSX element representing the REPL.
+ */
 export default function REPL() {
+  // The list of commands.
   const [commands,setCommands] = useState<CommandResult[]>([]);
+  // Whether or not the REPL is in brief mode.
   const [isBrief,setBrief] = useState<boolean>(true);
-
+  // The registry of commands.
   const registry : CommandRegistry = new CommandRegistry;
+  // A class that creates the commands related to CSV, adding them to the registry.
   const csvCommands : CSVCommandCreator = new CSVCommandCreator(registry);
   csvCommands.initalizeCommands();
+  // Registers the "mode" command into the registry.
   registry.registerCommand("mode", () => {
     const newBrief = !isBrief;
     setBrief(newBrief);
     return newBrief ? "Current mode is: BRIEF" : "Current mode is: VERBOSE";
   });
 
+  /**
+   * The return method, which returns a JSX element representing the REPL.
+   */
   return (
     <div className="repl">  
       <REPLHistory list={commands} isBrief={isBrief}/>
