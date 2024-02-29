@@ -2,18 +2,27 @@ import '../styles/main.css';
 import { getHeader } from '../../mocked_data/mockedCSVFunc';
 import { useState } from 'react';
 
-// Remember that parameter names don't necessarily need to overlap;
-// I could use different variable names in the actual function.
-  interface CSVTableViewProps {
+/**
+ * The properties of a CSV Table View componenent.
+ */
+interface CSVTableViewProps {
     called_command : string;
     csvArray: string[][]
-  }
+}
   
-  // Input boxes contain state. We want to make sure React is managing that state,
-  // so we have a special component that wraps the input box.
-  export function CSVTableView(props: CSVTableViewProps) {
+/**
+ * A function that returns a table representing the CSV.
+ * @param props The properties of the table.
+ * @returns A JSX Element for the table.
+ */
+export function CSVTableView(props: CSVTableViewProps) {
+    // Whether or not the table should have a header.
     const [header] = useState(getHeader());
 
+    /**
+     * A method for handling the table's rendering.
+     * @returns A JSX element for the formatted table.
+     */
     function handleTable() : JSX.Element {
         return (<table >
             <tbody>
@@ -40,8 +49,11 @@ import { useState } from 'react';
         </table>)
     }
 
+    /**
+     * The return method for rending.
+     */
     return (
-      handleTable()
+        handleTable()
     );
-  }
+}
 
