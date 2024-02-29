@@ -9,8 +9,8 @@ export class CSVCommandCreator {
     }
 
     initalizeCommands() {
-        this.registry.registerCommand("view", () : string[][] | string => {return viewcsv()});
-        this.registry.registerCommand("load_file", (args : string[]) : string => {return loadcsv(args);}, () : string => {return getHeaderFormatting()})
+        this.registry.registerCommand("view", () : string[][] | string => {return viewcsv()}, () : string => {return getHeaderFormatting()});
+        this.registry.registerCommand("load_file", (args : string[]) : string => {return loadcsv(args);})
         this.registry.registerCommand("search", (args: string[]): string[][] | string => { return searchcsv(args); })
     }
 }
