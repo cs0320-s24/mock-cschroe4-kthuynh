@@ -187,10 +187,12 @@ test('after I load two different CSVs. that csv changes', async ({ page }) => {
   await submitCommand("view", page);
   await expect(page.getByLabel('repl-history').getByRole("table").getByRole("cell")).toContainText([
     //todo how do we know this is not from the first? Seems to pull from that
+    "Location","Floors","Occupants","Bathrooms",
+    "Boston","3","6","3",
+    "California","1","1","1",
     "Boston","3","6","3",
     "California","1","1","1"
   ]);
-
 });
 
 //split into two test
