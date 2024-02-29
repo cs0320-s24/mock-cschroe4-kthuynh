@@ -54,7 +54,6 @@ test('after I type into the input box, its text changes', async ({ page }) => {
 });
 
 test('on page load, i see a button', async ({ page }) => {
-  // TODO WITH TA: Fill this in!
   await page.goto('http://localhost:8000/');
   await page.getByLabel('Login').click();
 
@@ -68,20 +67,20 @@ async function submitCommand(command: string, page){
 }
 
 test('after I click the button, my command gets pushed', async ({ page }) => {
-  // TODO: Fill this in to test your button push functionality!
   await submitCommand("load_file data/mockedCSV true", page);
   
   await expect(page.getByLabel('repl-command')).toBeVisible();
   await expect(page.getByLabel('repl-command')).toHaveText('Current CSV: data/mockedCSV');
 
   await submitCommand("load_file data/mockedCSVNoHeader true", page);
-  await expect(page.getByLabel('repl-command')).toHaveText('Current CSV: data/mockedCSV');
-  await expect(page.getByLabel('repl-command')).toHaveText('Current CSV: data/mockedCSVNoHeader');
+  //await expect(page.getByLabel('repl-history')).toHaveText('Current CSV: data/mockedCSV');
+  await expect(page.getByLabel('repl-command').getByText(/^Current CSV: data\/mockedCSV$/)).toBeVisible();
+  await expect(page.getByLabel('repl-command').getByText(/^Current CSV: data\/mockedCSVNoHeader$/)).toBeVisible();
   
   await submitCommand("load_file data/mockedCSVSharedAcrossRows false", page);
-  await expect(page.getByLabel('repl-command')).toHaveText('Current CSV: data/mockedCSV');
-  await expect(page.getByLabel('repl-command')).toHaveText('Current CSV: data/mockedCSVNoHeader');
-  await expect(page.getByLabel('repl-command')).toHaveText('Current CSV: data/mockedCSVSharedAcrossRows');
+  await expect(page.getByLabel('repl-command').getByText(/^Current CSV: data\/mockedCSV$/)).toBeVisible();
+  await expect(page.getByLabel('repl-command').getByText(/^Current CSV: data\/mockedCSVNoHeader$/)).toBeVisible();
+  await expect(page.getByLabel('repl-command').getByText(/^Current CSV: data\/mockedCSVSharedAcrossRows$/)).toBeVisible();
 });
 
 
@@ -89,27 +88,69 @@ test('after I click the button, my command gets pushed', async ({ page }) => {
 test('after I enter mode, command shows verbose mode', async ({ page }) => {
   //test the mode functionality to view commands
   await submitCommand("load_file data/mockedCSV true", page);
-  
   await expect(page.getByLabel('verbose-box')).not.toBeVisible();
   
   await submitCommand("mode", page);
-
-  await expect(page.getByLabel('verbose-box').first()).toBeVisible();
+  await expect(page.getByLabel('repl-command').getByText(/^Current mode is: VERBOSE$/)).toBeVisible();
   
+  //check if any verbose-box is visible
+  await expect(page.getByLabel('verbose-box').first()).toBeVisible();
+  //check specific verbose-box
+  await expect(page.getByLabel('verbose-box').getByText(/^load_file$/)).toBeVisible();
+
+  await expect(page.getByLabel('verbose-box').getByRole("paragraph")).toContainText(
+    ['Command',
+    'load_file',
+    'Output', 
+    'Current CSV: data/mockedCSV']);
+
+    await expect(page.getByLabel('verbose-box').getByRole("paragraph")).toContainText(
+    ['Command',
+    'mode',
+    'Output', 
+    'Current mode is: VERBOSE']);
+
 });
 
 test('after I enter mode again, command does not show verbose mode', async ({ page }) => {
   //test the mode functionality to view commands
+  await submitCommand("load_file data/mockedCSV true", page);
+  await submitCommand("mode", page);
+  await submitCommand("mode", page);
+  await expect(page.getByLabel('repl-command').getByText(/Current mode is: BRIEF/)).toBeVisible();
+  await expect(page.getByLabel('verbose-box')).not.toBeVisible();
+
+  //check whole page text
+  await expect(page.getByLabel('repl-history').getByRole("paragraph")).toContainText(
+    [/^Current CSV: data\/mockedCSV$/,
+    'Current mode is: VERBOSE',
+    'Current mode is: BRIEF',]
+    );
 
 });
 
 test('after I enter mode, past commands shows verbose mode too', async ({ page }) => {
   //test the mode functionality to view commands
+  await submitCommand("load_file data/mockedCSV true", page);
+  await submitCommand("mode", page);
+  await submitCommand("mode", page);
+  await submitCommand("load_file data/mockedCSVNoHeader false", page);
+  await submitCommand("mode", page);
+
+  await expect(page.getByLabel("verbose-box")).toContainText(
+    [
+      'Commandload_fileOutputCurrent CSV: data/mockedCSV',
+      'CommandmodeOutputCurrent mode is: VERBOSE',
+      'CommandmodeOutputCurrent mode is: BRIEF',
+      'Commandload_fileOutputCurrent CSV: data/mockedCSVNoHeader',
+      'CommandmodeOutputCurrent mode is: VERBOSE'
+    ]
+  )
 
 });
 
 test('after I load a csv, the URL gets pushed', async ({ page }) => {
-
+  // TODO: we kinda already do this
 });
 
 test('after I load the wrong csv, an error message shows', async ({ page }) => {
@@ -117,6 +158,7 @@ test('after I load the wrong csv, an error message shows', async ({ page }) => {
   await submitCommand("load_file data/NOTREAL true", page);
   
   await expect(page.getByLabel('repl-history')).not.toHaveText('Current CSV: data/NOTREAL');
+  await expect(page.getByLabel('repl-history')).toHaveText('ERROR: Missing required params for <load_file>: <file_path> <has_header>');
 
   await submitCommand("load_file data/mockedCSV true", page);
   await expect(page.getByLabel('repl-history')).not.toHaveText('Current CSV: data/NOTREAL');
@@ -124,15 +166,39 @@ test('after I load the wrong csv, an error message shows', async ({ page }) => {
 });
 
 test('after I view or search before load, an error message shows', async ({ page }) => {
+  await submitCommand("view", page);
+  await expect(page.getByLabel('repl-history')).toHaveText('ERROR: CSV not loaded');
 
+  await submitCommand("search", page);
+  await expect(page.getByLabel('repl-history')).toHaveText('ERROR: CSV not loaded');
 });
 
 test('after I load two different CSVs. that csv changes', async ({ page }) => {
+  
+  await submitCommand("load_file data/mockedCSV true", page);
+  await submitCommand("view", page);
+  await expect(page.getByLabel('repl-history').getByRole("cell")).toContainText([
+    "Location","Floors","Occupants","Bathrooms",
+    "Boston","3","6","3",
+    "California","1","1","1"
+  ]);
+
+  await submitCommand("load_file data/mockedCSVNoHeader true", page);
+  await submitCommand("view", page);
+  await expect(page.getByLabel('repl-history').getByRole("table").getByRole("cell")).toContainText([
+    //todo how do we know this is not from the first? Seems to pull from that
+    "Boston","3","6","3",
+    "California","1","1","1"
+  ]);
 
 });
 
 //split into two test
 test('after I search a CSV (with or without column), error message or row return', async ({ page }) => {
+
+});
+
+test('after I search for something with spaces, error message or row return', async ({ page }) => {
 
 });
 
