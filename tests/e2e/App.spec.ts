@@ -10,9 +10,11 @@ import { expect, test } from "@playwright/test";
  */
 
 // If you needed to do something before every test case...
-test.beforeEach(() => {
-    // ... you'd put it here.
-    // TODO: Is there something we need to do before every test case to avoid repeating code?
+test.beforeEach(async ({page})  => {
+
+    // Step 1: Navigate to a URL
+    await page.goto('http://localhost:8000/');
+    await page.getByLabel('Login').click();
   })
 
 /**
@@ -40,10 +42,6 @@ test('on page load, i dont see the input box until login', async ({ page }) => {
 })
 
 test('after I type into the input box, its text changes', async ({ page }) => {
-  // Step 1: Navigate to a URL
-  await page.goto('http://localhost:8000/');
-  await page.getByLabel('Login').click();
-
   // Step 2: Interact with the page
   // Locate the element you are looking for
   await page.getByLabel('Command input').click();
@@ -63,12 +61,49 @@ test('on page load, i see a button', async ({ page }) => {
   await expect(page.getByRole('button')).toBeVisible;
 });
 
+async function submitCommand(command: string, page){
+  await page.getByLabel('Command input').click();
+  await page.getByLabel('Command input').fill(command);
+  await page.getByLabel('submit').click();
+}
 
 test('after I click the button, my command gets pushed', async ({ page }) => {
   // TODO: Fill this in to test your button push functionality!
+  await submitCommand("load_file data/mockedCSV true", page);
+  
+  await expect(page.getByLabel('repl-command')).toBeVisible();
+  await expect(page.getByLabel('repl-command')).toHaveText('Current CSV: data/mockedCSV');
+
+  await submitCommand("load_file data/mockedCSVNoHeader true", page);
+  await expect(page.getByLabel('repl-command')).toHaveText('Current CSV: data/mockedCSV');
+  await expect(page.getByLabel('repl-command')).toHaveText('Current CSV: data/mockedCSVNoHeader');
+  
+  await submitCommand("load_file data/mockedCSVSharedAcrossRows false", page);
+  await expect(page.getByLabel('repl-command')).toHaveText('Current CSV: data/mockedCSV');
+  await expect(page.getByLabel('repl-command')).toHaveText('Current CSV: data/mockedCSVNoHeader');
+  await expect(page.getByLabel('repl-command')).toHaveText('Current CSV: data/mockedCSVSharedAcrossRows');
 });
 
-test('after I enter mode, the history shows up', async ({ page }) => {
+
+
+test('after I enter mode, command shows verbose mode', async ({ page }) => {
+  //test the mode functionality to view commands
+  await submitCommand("load_file data/mockedCSV true", page);
+  
+  await expect(page.getByLabel('verbose-box')).not.toBeVisible();
+  
+  await submitCommand("mode", page);
+
+  await expect(page.getByLabel('verbose-box').first()).toBeVisible();
+  
+});
+
+test('after I enter mode again, command does not show verbose mode', async ({ page }) => {
+  //test the mode functionality to view commands
+
+});
+
+test('after I enter mode, past commands shows verbose mode too', async ({ page }) => {
   //test the mode functionality to view commands
 
 });
@@ -78,7 +113,14 @@ test('after I load a csv, the URL gets pushed', async ({ page }) => {
 });
 
 test('after I load the wrong csv, an error message shows', async ({ page }) => {
+  // TODO: Fill this in to test your button push functionality!
+  await submitCommand("load_file data/NOTREAL true", page);
+  
+  await expect(page.getByLabel('repl-history')).not.toHaveText('Current CSV: data/NOTREAL');
 
+  await submitCommand("load_file data/mockedCSV true", page);
+  await expect(page.getByLabel('repl-history')).not.toHaveText('Current CSV: data/NOTREAL');
+  await expect(page.getByLabel('repl-history')).toHaveText('Current CSV: data/mockedCSV');
 });
 
 test('after I view or search before load, an error message shows', async ({ page }) => {
@@ -89,6 +131,7 @@ test('after I load two different CSVs. that csv changes', async ({ page }) => {
 
 });
 
+//split into two test
 test('after I search a CSV (with or without column), error message or row return', async ({ page }) => {
 
 });

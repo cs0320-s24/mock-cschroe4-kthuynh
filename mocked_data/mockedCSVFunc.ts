@@ -52,7 +52,13 @@ export function searchcsv(args: string[]) : string[][] | string {
         return "ERROR: Missing required params for <search>: <value> OPTIONAL:<column_identifier>";
     }
 
-    //todo check has header
+    if (args[1] && !has_header) {
+        var reg = /^-?\d+\.?\d*$/;
+        if (!reg.test(args[1])) {
+            return "ERROR: CSV cannot be searched by header values, only column index";
+        }
+    }
+
     const wordsToRowsMap = search_map.get(currentCSV);
     if(wordsToRowsMap){
         const query : string = (args[0].toLowerCase() + " " + (args[1] ? args[1].toLowerCase() : "")).trim();

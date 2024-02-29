@@ -24,7 +24,7 @@ export function REPLHistory(props : REPLHistoryProps) {
             return formatResult(result);
         } else {
             return (
-            <div className="result-box">
+            <div className="result-box" aria-label="verbose-box">
                 <p><b><u>Command</u></b></p>
                 <p>{result.command}</p>
                 <p><b><u>Output</u></b></p>
@@ -34,9 +34,9 @@ export function REPLHistory(props : REPLHistoryProps) {
     }
 
     return (
-        <div className="repl-history">
+        <div className="repl-history" aria-label='repl-history'>
             {props.list.map((value,index) => {
-                return <div key={index}>{handleFormat(value)}</div>;
+                return <div key={index} aria-label='repl-command'>{handleFormat(value)}</div>;
             })}
         </div>
     );

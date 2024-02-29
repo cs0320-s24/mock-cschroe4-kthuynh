@@ -31,7 +31,7 @@ export function REPLInput(props : REPLInputProps) {
               <legend>Enter a command:</legend>
               <ControlledInput value={commandString} setValue={setCommandString} ariaLabel={"Command input"}/>
             </fieldset>
-            <button onClick={handleSubmit}>Submit</button>
+            <button onClick={handleSubmit} aria-label="submit">Submit</button>
         </div>
     );
   }
