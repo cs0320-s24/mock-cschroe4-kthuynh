@@ -11,10 +11,9 @@ interface REPLHistoryProps{
 export function REPLHistory(props : REPLHistoryProps) {
 
     function formatResult(result : string[][] | string, formatID : string) : JSX.Element {
-        console.log(formatID);
         if (Array.isArray(result)) {
             return (
-            <table  className={formatID}>
+            <table >
                 <tbody>
                 {
                     result.map(row => {
