@@ -9,21 +9,11 @@ export interface REPLFunction {
     (args: Array<string>): string[][] | string;
 }
 
-//An interface for comands that return a class formatting name 
-//that the developer wants associated wih the function's output
-export interface FormattingFunction {    
-    () : string;
-}
-
 
 export class CommandRegistry {
     private commandMaps : Map<string, REPLFunction> = new Map;
-    private resultFormating : Map<string, FormattingFunction> = new Map; //Does this seem good to you keanu?
 
-    registerCommand(command : string, commandBody : REPLFunction, comandFormating? : FormattingFunction): void {
-        if(comandFormating){
-            this.resultFormating.set(command, comandFormating);
-        }
+    registerCommand(command : string, commandBody : REPLFunction): void {
         this.commandMaps.set(command, commandBody);
     }
 
@@ -33,15 +23,6 @@ export class CommandRegistry {
         } else {
             const func = this.commandMaps.get(command);
             return func!(args);
-        }
-    }
-
-    executeGetFormatting(command : string) : string {
-        if (!this.resultFormating.has(command)) {
-            return '';
-        } else {
-            const func = this.resultFormating.get(command);
-            return func!();
         }
     }
 }
