@@ -72,6 +72,14 @@ export function getHeaderFormatting(): string{
     return '';
 }
 
+export function getHeader(): boolean {
+    if (has_header.toLowerCase() === "true") {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 export function clearLoadedCSV() {
     currentCSV = "";
     has_header = "";
