@@ -16,7 +16,8 @@ export function REPLInput(props : REPLInputProps) {
     function handleSubmit() : void {
       try {
         let parsedCommandString : string[] = commandString.split(" ");
-        let result : CommandResult = {command : parsedCommandString[0], result : props.registry.executeCommand(parsedCommandString[0], parsedCommandString.slice(1)), formatID : props.registry.executeGetFormatting(parsedCommandString[0])}
+        let result : CommandResult = {command : parsedCommandString[0], 
+          result : props.registry.executeCommand(parsedCommandString[0], parsedCommandString.slice(1))}
         props.setList([...props.list, result]);
       } catch {
         alert("Command does not exist!");

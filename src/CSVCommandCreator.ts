@@ -1,4 +1,4 @@
-import { loadcsv, viewcsv, searchcsv, getHeaderFormatting } from "../mocked_data/mockedCSVFunc";
+import { loadcsv, viewcsv, searchcsv} from "../mocked_data/mockedCSVFunc";
 import { CommandRegistry } from "./CommandRegistry";
 
 export class CSVCommandCreator {
@@ -10,7 +10,7 @@ export class CSVCommandCreator {
 
     initalizeCommands() {
         this.registry.registerCommand("view", () : string[][] | string => {return viewcsv()});
-        this.registry.registerCommand("load_file", (args : string[]) : string => {return loadcsv(args);}, () : string => {return getHeaderFormatting()})
+        this.registry.registerCommand("load_file", (args : string[]) : string => {return loadcsv(args);})
         this.registry.registerCommand("search", (args: string[]): string[][] | string => { return searchcsv(args); })
     }
 }

@@ -65,13 +65,6 @@ export function searchcsv(args: string[]) : string[][] | string {
     return "Keyword not found";
 }
 
-export function getHeaderFormatting(): string{
-    if(has_header.toLowerCase() == "true"){
-        return 'headed-table';
-    }
-    return '';
-}
-
 export function getHeader(): boolean {
     if (has_header.toLowerCase() === "true") {
         return true;

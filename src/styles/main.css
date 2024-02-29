@@ -54,11 +54,8 @@ td {
     margin-bottom: 20px;
 }
 
-.headed-table {
-    margin: auto;
-    border: 3px black solid;
-    border-radius: 3px;
-    margin-bottom: 20px;
+.header{
+    background-color: lightgreen;
 }
 
 .headed-table tr:first-child{
