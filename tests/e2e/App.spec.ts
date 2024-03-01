@@ -83,6 +83,15 @@ test('after I click the button, my command gets pushed', async ({ page }) => {
   await expect(page.getByLabel('repl-command').getByText(/^Current CSV: data\/mockedCSVSharedAcrossRows$/)).toBeVisible();
 });
 
+test('after I load a csv, the URL gets pushed', async ({ page }) => {
+  //TODO this one is kidna similar to the one above so maybe take out. Its a bit simpler so maybe its helpful idk
+    await submitCommand("load_file data/mockedCSV true", page);
+    await expect(page.getByLabel('repl-command').getByText(/^Current CSV: data\/mockedCSV$/)).toBeVisible()
+
+    await submitCommand("load_file data/mockedCSVNoHeader false", page);
+    await expect(page.getByLabel('repl-command').getByText(/^Current CSV: data\/mockedCSVNoHeader$/)).toBeVisible()
+});
+
 
 
 test('after I enter mode, command shows verbose mode', async ({ page }) => {
@@ -147,10 +156,6 @@ test('after I enter mode, past commands shows verbose mode too', async ({ page }
     ]
   )
 
-});
-
-test('after I load a csv, the URL gets pushed', async ({ page }) => {
-  // TODO: we kinda already do this
 });
 
 test('after I load the wrong csv, an error message shows', async ({ page }) => {
