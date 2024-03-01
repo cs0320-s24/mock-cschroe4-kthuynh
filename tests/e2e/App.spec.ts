@@ -161,7 +161,7 @@ test('after I load the wrong csv, an error message shows', async ({ page }) => {
 
   await submitCommand("load_file data/mockedCSV true", page);
   await expect(page.getByLabel('repl-history')).not.toHaveText('Current CSV: data/NOTREAL');
-  await expect(page.getByLabel('repl-history')).toHaveText('Current CSV: data/mockedCSV');
+  await expect(page.getByLabel('repl-command').getByText(/^Current CSV: data\/mockedCSV$/)).toBeVisible();
 });
 
 test('after I view or search before load, an error message shows', async ({ page }) => {
@@ -177,12 +177,9 @@ test('after I view or search before load, an error message shows', async ({ page
   await expect(page.getByLabel("verbose-box")).
   toContainText(
     [ 
-      'ERROR: CSV not loaded'
-    ]
-  )
-  await expect(page.getByLabel("verbose-box").getByText(/search/)).toContainText(
-    [ 
-      'ERROR: CSV not loaded'
+      "CommandviewOutputERROR: CSV not loaded",
+      "CommandsearchOutputERROR: CSV not loaded",
+      "CommandmodeOutputCurrent mode is: VERBOSE"
     ]
   )
 
@@ -250,16 +247,15 @@ test('after I search a CSV without column, error message or row return', async (
   ]);
 });
 
-test('after I search for something with spaces, error message or row return', async ({ page }) => {
-
-});
-
 test('while declaring a header in loadcsv, if not true or false should return error message', async ({ page }) => {
-
+  await submitCommand("load_file data/mockedCSVNoHeader no", page);
+  await expect(page.getByLabel('repl-command').getByText(/^ERROR: <has_header> must be in the form of true\/false$/)).toBeVisible();
 });
 
 test('after I declare no header and search a CSV with string column identifier, error message', async ({ page }) => {
-
+    await submitCommand("load_file data/mockedCSVNoHeader false", page);
+    await submitCommand("search Boston Location", page);
+    await expect(page.getByLabel('repl-command').getByText(/^ERROR: CSV cannot be searched by header values, only column index$/)).toBeVisible();
 });
 
 test('after I click log out, resets csv state and comand history', async ({ page }) => {
@@ -317,11 +313,11 @@ test('after I enter a command that exists but wrong number of args, error messag
   await submitCommand("load_file data/mockedCSV true", page);
 
   //too few args - search
-  await submitCommand("search 1 1 1", page);
+  await submitCommand("search", page);
   await expect(page.getByLabel('repl-command').getByText(/^ERROR: Missing required params for <search>: <value> OPTIONAL:<column_identifier>$/)).toBeVisible();
 
   //too many args - search
-  await submitCommand("search", page);
+  await submitCommand("search 1 1 1", page);
   await expect(page.getByLabel('repl-command').getByText(/^ERROR: Too many params for <search>: <value> OPTIONAL:<column_identifier>$/)).toBeVisible();
 });
 

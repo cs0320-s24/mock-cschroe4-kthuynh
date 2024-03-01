@@ -57,7 +57,9 @@ export function searchcsv(args: string[]) : string[][] | string {
         return "ERROR: Too many params for <search>: <value> OPTIONAL:<column_identifier>";
     }
 
-    if (args[1] && !has_header) {
+
+    if (args[1] && !getHasHeader()) {
+        console.log('hello')
         var reg = /^-?\d+\.?\d*$/;
         if (!reg.test(args[1])) {
             return "ERROR: CSV cannot be searched by header values, only column index";
@@ -76,7 +78,7 @@ export function searchcsv(args: string[]) : string[][] | string {
     return "Keyword not found";
 }
 
-export function getHeader(): boolean {
+export function getHasHeader(): boolean {
     if (has_header.toLowerCase() === "true") {
         return true;
     } else {

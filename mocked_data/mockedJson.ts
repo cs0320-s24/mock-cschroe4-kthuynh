@@ -43,7 +43,6 @@ search_map.get("data/mockedCSVSharedAcrossRows")?.set("1 occupants", [["Californ
 search_map.get("data/mockedCSVSharedAcrossRows")?.set("california", [["California", "1", "1", "1", "1,500"]]);
 search_map.get("data/mockedCSVSharedAcrossRows")?.set("california 1", [["California", "1", "1", "1", "1,500"]]);
 search_map.get("data/mockedCSVSharedAcrossRows")?.set("boston location", [["Boston", "3", "6", "3", "2,000"], ["Boston", "1", "2", "4", "1,000"]]);
-console.log(search_map.get("data/mockedCSVSharedAcrossRows"));
 
 const mockedCSVMalformed: string[][] = [
     ["Location", "", "Occupants"],

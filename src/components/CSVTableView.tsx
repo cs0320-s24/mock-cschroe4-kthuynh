@@ -1,5 +1,5 @@
 import '../styles/main.css';
-import { getHeader } from '../../mocked_data/mockedCSVFunc';
+import { getHasHeader } from '../../mocked_data/mockedCSVFunc';
 import { useState } from 'react';
 
 /**
@@ -17,7 +17,7 @@ interface CSVTableViewProps {
  */
 export function CSVTableView(props: CSVTableViewProps) {
     // Whether or not the table should have a header.
-    const [header] = useState(getHeader());
+    const [header] = useState(getHasHeader());
 
     /**
      * A method for handling the table's rendering.
