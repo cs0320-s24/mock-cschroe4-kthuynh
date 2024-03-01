@@ -8,6 +8,9 @@ let has_header : string;
 // args[0] filepath, args[1] hasHeader
 export function loadcsv(args: string[]) : string {
     if (args.length != 2) {
+        if(args.length > 2){
+            return "ERROR: Too many params for <load_file>: <file_path> <has_header>";
+        }
         return "ERROR: Missing required params for <load_file>: <file_path> <has_header>";
     } else {
         const csv: string = args[0];
@@ -48,8 +51,10 @@ export function searchcsv(args: string[]) : string[][] | string {
         return "ERROR: CSV not loaded";
     }
 
-    if (args.length != 1 && args.length != 2) {
+    if (args.length < 1) {
         return "ERROR: Missing required params for <search>: <value> OPTIONAL:<column_identifier>";
+    } else if(args.length > 2){
+        return "ERROR: Too many params for <search>: <value> OPTIONAL:<column_identifier>";
     }
 
     if (args[1] && !has_header) {

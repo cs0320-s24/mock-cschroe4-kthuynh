@@ -32,7 +32,7 @@ export function REPLInput(props : REPLInputProps) {
         result : props.registry.executeCommand(parsedCommandString[0], parsedCommandString.slice(1))}
       props.setList([...props.list, result]);
     } catch {
-      alert("Command could not be processed!");
+      alert("Invalid command. Check documentation for availible commands");
     }
     setCommandString('');
     document.getElementById("command-input")?.focus();

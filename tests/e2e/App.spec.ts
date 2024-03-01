@@ -117,7 +117,7 @@ test('after I enter mode again, command does not show verbose mode', async ({ pa
   await submitCommand("load_file data/mockedCSV true", page);
   await submitCommand("mode", page);
   await submitCommand("mode", page);
-  await expect(page.getByLabel('repl-command').getByText(/Current mode is: BRIEF/)).toBeVisible();
+  await expect(page.getByLabel('repl-command').getByText(/^Current mode is: BRIEF$/)).toBeVisible();
   await expect(page.getByLabel('verbose-box')).not.toBeVisible();
 
   //check whole page text
@@ -154,11 +154,10 @@ test('after I load a csv, the URL gets pushed', async ({ page }) => {
 });
 
 test('after I load the wrong csv, an error message shows', async ({ page }) => {
-  // TODO: Fill this in to test your button push functionality!
   await submitCommand("load_file data/NOTREAL true", page);
   
   await expect(page.getByLabel('repl-history')).not.toHaveText('Current CSV: data/NOTREAL');
-  await expect(page.getByLabel('repl-history')).toHaveText('ERROR: Missing required params for <load_file>: <file_path> <has_header>');
+  await expect(page.getByLabel('repl-history')).toHaveText('ERROR: CSV not found: data/NOTREAL');
 
   await submitCommand("load_file data/mockedCSV true", page);
   await expect(page.getByLabel('repl-history')).not.toHaveText('Current CSV: data/NOTREAL');
@@ -170,7 +169,23 @@ test('after I view or search before load, an error message shows', async ({ page
   await expect(page.getByLabel('repl-history')).toHaveText('ERROR: CSV not loaded');
 
   await submitCommand("search", page);
-  await expect(page.getByLabel('repl-history')).toHaveText('ERROR: CSV not loaded');
+  //should now have two error messages
+  await expect(page.getByLabel('repl-history')).toHaveText('ERROR: CSV not loadedERROR: CSV not loaded');
+
+  await submitCommand("mode", page);
+  //to see explicitly the associated commands with the errors
+  await expect(page.getByLabel("verbose-box")).
+  toContainText(
+    [ 
+      'ERROR: CSV not loaded'
+    ]
+  )
+  await expect(page.getByLabel("verbose-box").getByText(/search/)).toContainText(
+    [ 
+      'ERROR: CSV not loaded'
+    ]
+  )
+
 });
 
 test('after I load two different CSVs. that csv changes', async ({ page }) => {
@@ -186,7 +201,6 @@ test('after I load two different CSVs. that csv changes', async ({ page }) => {
   await submitCommand("load_file data/mockedCSVNoHeader true", page);
   await submitCommand("view", page);
   await expect(page.getByLabel('repl-history').getByRole("table").getByRole("cell")).toContainText([
-    //todo how do we know this is not from the first? Seems to pull from that
     "Location","Floors","Occupants","Bathrooms",
     "Boston","3","6","3",
     "California","1","1","1",
@@ -195,9 +209,45 @@ test('after I load two different CSVs. that csv changes', async ({ page }) => {
   ]);
 });
 
-//split into two test
-test('after I search a CSV (with or without column), error message or row return', async ({ page }) => {
+//ERROR: CSV not found: mockedCSV
+test('after I load a CSV not in data directory or does not exist, error message or row return', async ({ page }) => {
+  await submitCommand("load_file mockedCSV true", page);
+  await expect(page.getByLabel('repl-command').getByText(/^ERROR: CSV not found: mockedCSV$/)).toBeVisible();
 
+  await submitCommand("load_file data/blahblah true", page);
+  await expect(page.getByLabel('repl-command').getByText(/^ERROR: CSV not found: data\/blahblah$/)).toBeVisible();
+
+});
+test('after I search a CSV with column, error message or row return', async ({ page }) => {
+  await submitCommand("load_file data/mockedCSVSharedAcrossRows true", page);
+  //one row returned
+  await submitCommand("search California 1", page);
+  await expect(page.getByLabel('repl-history').getByRole("table").getByRole("cell")).toContainText([
+    "California","1","1","1"
+  ]);
+
+  //two rows returned
+  await submitCommand("search Boston Location", page);
+  await expect(page.getByLabel('repl-history').getByRole("table").getByRole("cell")).toContainText([
+    "Boston", "3", "6", "3", "2,000", 
+    "Boston", "1", "2", "4", "1,000"
+  ]);
+});
+
+test('after I search a CSV without column, error message or row return', async ({ page }) => {
+  await submitCommand("load_file data/mockedCSVSharedAcrossRows true", page);
+  //one row returned
+  await submitCommand("search California 1", page);
+  await expect(page.getByLabel('repl-history').getByRole("table").getByRole("cell")).toContainText([
+    "California","1","1","1"
+  ]);
+
+  //two rows returned
+  await submitCommand("search 1", page);
+  await expect(page.getByLabel('repl-history').getByRole("table").getByRole("cell")).toContainText([
+    "California", "1", "1", "1", "1,500",
+    "Boston", "1", "2", "4", "1,000"
+  ]);
 });
 
 test('after I search for something with spaces, error message or row return', async ({ page }) => {
@@ -213,18 +263,65 @@ test('after I declare no header and search a CSV with string column identifier, 
 });
 
 test('after I click log out, resets csv state and comand history', async ({ page }) => {
-  
+  await submitCommand("load_file data/mockedCSVNoHeader true", page);
+  await submitCommand("view", page);
+  await page.getByLabel('Sign Out').click();
+  await page.getByLabel('Login').click();
+
+  //no table should be visible anymore
+  await expect(page.getByLabel('repl-history').getByRole("table")).not.toBeVisible();
+
+  await submitCommand("view", page);
+  //error message expected
+  await expect(page.getByLabel('repl-command').getByText(/^ERROR: CSV not loaded$/)).toBeVisible();
 });
 
 test('after I enter an empty command, I get an error message', async ({ page }) => {
-  
+  page.on('dialog', async(d) => {
+    expect(d.type()).toContain("alert");
+    //Invalid command. Check documentation for availible commands
+    expect(d.message()).toContain("Invalid command. Check documentation for availible commands");
+    await d.accept();
+  })
+  await submitCommand("",page);
 });
 
 test('after I enter a command that does not exist, I get an error message', async ({ page }) => {
-  
+  page.on('dialog', async(d) => {
+    expect(d.type()).toContain("alert");
+    //Invalid command. Check documentation for availible commands
+    expect(d.message()).toContain("Invalid command. Check documentation for availible commands");
+    await d.accept();
+  })
+  await submitCommand("not a command",page);
+  //contains part of command
+  await submitCommand("load data/mockedCSV true",page);
+  await submitCommand("vie",page);
+  await submitCommand("searc boston location",page);
+  //contains full command but also more to it
+  await submitCommand("load_file_csv data/mockedCSV true",page);
+  await submitCommand("viewcsv",page);
+  await submitCommand("searchcsv boston location",page);
 });
 
 test('after I enter a command that exists but wrong number of args, error message', async ({ page }) => {
-  
+  //too few args - load
+  await submitCommand("load_file", page);
+  await expect(page.getByLabel('repl-command').getByText(/^ERROR: Missing required params for <load_file>: <file_path> <has_header>$/)).toBeVisible();
+
+  //too many args - load
+  await submitCommand("load_file data/mockedCSV true extra", page);
+  await expect(page.getByLabel('repl-command').getByText(/^ERROR: Too many params for <load_file>: <file_path> <has_header>$/)).toBeVisible();
+
+  //correctly load csv to test search
+  await submitCommand("load_file data/mockedCSV true", page);
+
+  //too few args - search
+  await submitCommand("search 1 1 1", page);
+  await expect(page.getByLabel('repl-command').getByText(/^ERROR: Missing required params for <search>: <value> OPTIONAL:<column_identifier>$/)).toBeVisible();
+
+  //too many args - search
+  await submitCommand("search", page);
+  await expect(page.getByLabel('repl-command').getByText(/^ERROR: Too many params for <search>: <value> OPTIONAL:<column_identifier>$/)).toBeVisible();
 });
 
