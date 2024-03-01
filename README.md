@@ -27,9 +27,39 @@ N/A
 
 # Tests
 
+In our testing directory, we wrote Playwright tests to check the contents of the webpage.
+We omitted unit tests from our suite becasue no backend is connected and there are no specific methods that we need to test.
+
+- For testing our front end website we tested:
+  - the login button is visible
+  - the input box isn't visible until login
+  - text changes when a user types into the command box
+  - clicking the button pushes the command
+  - loading a csv correctly pushes the URL
+  - the command "mode" makes the history appear
+  - when in verbose mode entering "mode" makes history disapear
+  - loading the wrong csv shows an error message shows
+  - view or search before load shows an error message shows
+  - loading two different CSVs changes the current csv
+  - load a CSV not in data directory or does not exist either error message or correct row return
+  - search a CSV with column, error message or row return
+  - searching a CSV without column results in error message or row return
+  - declaring a header in loadcsv, if not true or false should return error message
+  - declaring no header and searching a CSV with string column identifier returns an error message
+  - clicking log out resets csv state and comand history
+  - entering an empty command gets an error message
+  - entering a command that does not exist returns an error message
+  - entering a command that exists with wrong number of args returns error message
+
 # How to
 
 ## Run Tests
+
+You can run the tests for this project in a few different ways:
+
+1. Run all tests: npm run test
+2. Run all tests in e2e directory: npm run test:e2e
+3. Run one specific test: npx playwright test -g "\<string descriptor of test\>"
 
 ## Run Mock
 
@@ -45,4 +75,5 @@ N/A
 
 # Collaboration
 
+- Used Gearup Mock Template
 - Used to split arguments: https://stackoverflow.com/questions/16261635/javascript-split-string-by-space-but-ignore-space-in-quotes-notice-not-to-spli

@@ -105,11 +105,11 @@ test('after I enter mode, command shows verbose mode', async ({ page }) => {
   //check if any verbose-box is visible
   await expect(page.getByLabel('verbose-box').first()).toBeVisible();
   //check specific verbose-box
-  await expect(page.getByLabel('verbose-box').getByText(/^load_file$/)).toBeVisible();
+  await expect(page.getByLabel('verbose-box').getByText(/^load_file data\/mockedCSV true$/)).toBeVisible();
 
   await expect(page.getByLabel('verbose-box').getByRole("paragraph")).toContainText(
     ['Command',
-    'load_file',
+    'load_file data/mockedCSV true',
     'Output', 
     'Current CSV: data/mockedCSV']);
 
@@ -148,10 +148,10 @@ test('after I enter mode, past commands shows verbose mode too', async ({ page }
 
   await expect(page.getByLabel("verbose-box")).toContainText(
     [
-      'Commandload_fileOutputCurrent CSV: data/mockedCSV',
+      'Commandload_file data/mockedCSV trueOutputCurrent CSV: data/mockedCSV',
       'CommandmodeOutputCurrent mode is: VERBOSE',
       'CommandmodeOutputCurrent mode is: BRIEF',
-      'Commandload_fileOutputCurrent CSV: data/mockedCSVNoHeader',
+      'Commandload_file data/mockedCSVNoHeader falseOutputCurrent CSV: data/mockedCSVNoHeader',
       'CommandmodeOutputCurrent mode is: VERBOSE'
     ]
   )
@@ -168,6 +168,7 @@ test('after I load the wrong csv, an error message shows', async ({ page }) => {
   await expect(page.getByLabel('repl-history')).not.toHaveText('Current CSV: data/NOTREAL');
   await expect(page.getByLabel('repl-command').getByText(/^Current CSV: data\/mockedCSV$/)).toBeVisible();
 });
+
 
 test('after I view or search before load, an error message shows', async ({ page }) => {
   await submitCommand("view", page);
@@ -214,7 +215,7 @@ test('after I load two different CSVs. that csv changes', async ({ page }) => {
 //ERROR: CSV not found: mockedCSV
 test('after I load a CSV not in data directory or does not exist, error message or row return', async ({ page }) => {
   await submitCommand("load_file mockedCSV true", page);
-  await expect(page.getByLabel('repl-command').getByText(/^ERROR: CSV not found: mockedCSV$/)).toBeVisible();
+  await expect(page.getByLabel('repl-command').getByText(/^ERROR: File must be in the protected 'data' directory$/)).toBeVisible();
 
   await submitCommand("load_file data/blahblah true", page);
   await expect(page.getByLabel('repl-command').getByText(/^ERROR: CSV not found: data\/blahblah$/)).toBeVisible();

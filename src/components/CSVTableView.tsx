@@ -28,7 +28,7 @@ export function CSVTableView(props: CSVTableViewProps) {
             <tbody>
             {
                 props.csvArray.map((row,index) => {
-                    if (header && props.called_command === "view" && index===0) {
+                    if (header && props.called_command.startsWith("view") && index===0) {
                         return <tr className='header'>{
                             row.map(value => {
                                 return <td>{value}</td>

@@ -21,12 +21,12 @@ export function loadcsv(args: string[]) : string {
         const csv: string = args[0];
         has_header = args[1];
 
-        if (!file_map.has(csv)) {
-            return "ERROR: CSV not found: " + csv;
+        if (!csv.startsWith("data")) {
+            return "ERROR: File must be in the protected 'data' directory"
         }
 
-        if (!csv.startsWith("data")) {
-            return "ERROR: File must be in the protected 'data/' directory"
+        if (!file_map.has(csv)) {
+            return "ERROR: CSV not found: " + csv;
         }
 
         if (has_header.toLowerCase() !== "true" && has_header.toLowerCase() !== "false") {
