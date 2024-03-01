@@ -27,7 +27,7 @@ export function REPLInput(props : REPLInputProps) {
    */
   function handleSubmit() : void {
     try {
-      let parsedCommandString : string[] = commandString.split(" ");
+      let parsedCommandString : string[] = commandString.match(/(".*?"|[^"\s]+)+(?=\s*|\s*$)/g) || [];
       let result : CommandResult = {command : parsedCommandString[0], 
         result : props.registry.executeCommand(parsedCommandString[0], parsedCommandString.slice(1))}
       props.setList([...props.list, result]);
