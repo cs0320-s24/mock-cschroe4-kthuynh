@@ -25,6 +25,10 @@ export function loadcsv(args: string[]) : string {
             return "ERROR: CSV not found: " + csv;
         }
 
+        if (!csv.startsWith("data")) {
+            return "ERROR: File must be in the protected 'data/' directory"
+        }
+
         if (has_header.toLowerCase() !== "true" && has_header.toLowerCase() !== "false") {
             has_header = "";
             return "ERROR: <has_header> must be in the form of true/false";
