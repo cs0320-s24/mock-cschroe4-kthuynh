@@ -1,6 +1,6 @@
-mock/node_modules/
-mock/src/*.js
+mock-cschroe4-kthuynh/node_modules/
+mock-cschroe4-kthuynh/src/*.js
 .DS_Store
-mock/test-results/
-mock/playwright-report/
-mock/playwright/.cache/
+mock-cschroe4-kthuynh/test-results/
+mock-cschroe4-kthuynh/playwright-report/
+mock-cschroe4-kthuynh/playwright/.cache/
